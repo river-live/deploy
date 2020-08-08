@@ -6,26 +6,9 @@ const { promisify } = require("util");
 
 const cloudformation = new AWS.CloudFormation({ apiVersion: "2010-05-15" });
 
-// const asyncReadFile = promisify(fs.readFile.bind(fs));
-
-// const getFile = async (path, encoding = "utf-8") => {
-//   try {
-//     const file = await asyncReadFile(path, encoding);
-//     return file;
-//   } catch (e) {
-//     console.log(e);
-//   }
-// };
-
 const cluster = fs.readFileSync("recipes/cluster.yml", "utf-8");
 const resources = fs.readFileSync("recipes/resources.yml", "utf-8");
 const chatservice = fs.readFileSync("recipes/chat-service.yml", "utf-8");
-// const template = getFile("s3.yml");
-// console.log(template);
-
-// console.log(cluster);
-// console.log(resources);
-// console.log(chatservice);
 
 const clusterParams = {
   StackName: "Cluster",
@@ -50,6 +33,10 @@ const templates = { resourcesParams, chatserviceParams };
 const asyncCreateStack = promisify(
   cloudformation.createStack.bind(cloudformation)
 );
+
+// TODO look into setting up a setInterval to wait until one stack is complete before moving on to the next.
+// we can use https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CloudFormation.html#stackCreateComplete-waiter
+// to wait for the stack create complete before moving on to the next stack
 
 const createStack = async ({ resourcesParams, chatserviceParams }) => {
   try {
