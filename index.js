@@ -17,37 +17,56 @@ const cloudformation = new AWS.CloudFormation({ apiVersion: "2010-05-15" });
 //   }
 // };
 
-const template = fs.readFileSync("s3.yml", "utf-8");
+const cluster = fs.readFileSync("recipes/cluster.yml", "utf-8");
+const resources = fs.readFileSync("recipes/resources.yml", "utf-8");
+const chatservice = fs.readFileSync("recipes/chat-service.yml", "utf-8");
 // const template = getFile("s3.yml");
 // console.log(template);
 
-const params1 = {
-  StackName: "test-s3-bucket1",
-  TemplateBody: template,
+// console.log(cluster);
+// console.log(resources);
+// console.log(chatservice);
+
+const clusterParams = {
+  StackName: "Cluster",
+  TemplateBody: cluster,
   Capabilities: ["CAPABILITY_IAM"],
 };
 
-const params2 = {
-  StackName: "test-s3-bucket2",
-  TemplateBody: template,
+const resourcesParams = {
+  StackName: "Redis",
+  TemplateBody: resources,
   Capabilities: ["CAPABILITY_IAM"],
 };
+
+const chatserviceParams = {
+  StackName: "Chat-Service",
+  TemplateBody: chatservice,
+  Capabilities: ["CAPABILITY_IAM"],
+};
+
+const templates = { resourcesParams, chatserviceParams };
 
 const asyncCreateStack = promisify(
   cloudformation.createStack.bind(cloudformation)
 );
 
-const createStack = async (params) => {
+const createStack = async ({ resourcesParams, chatserviceParams }) => {
   try {
-    const data = await asyncCreateStack(params);
+    // let data = await asyncCreateStack(resourcesParams);
+    // console.log(data);
+    // console.log("Redis Resource created.");
+    let data = await asyncCreateStack(chatserviceParams);
     console.log(data);
+    console.log("Chat service created.");
   } catch (e) {
     console.log(e);
   }
 };
 
-createStack(params1);
-createStack(params2);
+createStack(templates);
+// createStack(resourcesParams);
+// createStack(chatserviceParams);
 
 // cloudformation.createStack(params, (err, data) => {
 //   if (err) console.log(err, err.stack);
