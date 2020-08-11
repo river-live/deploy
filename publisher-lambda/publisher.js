@@ -5,9 +5,9 @@ const io = emitter({
 });
 
 exports.handler = async (event) => {
-  const { room, message } = JSON.parse(event.body);
+  const { channel, eventName, data } = JSON.parse(event.body);
 
-  io.to(room).emit("event", message);
+  io.to(channel).emit(eventName, data);
 
   const response = {
     statusCode: 200,
