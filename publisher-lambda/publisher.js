@@ -1,11 +1,11 @@
 const emitter = require("socket.io-emitter");
-const io = emitter({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-});
+const host = process.env.REDIS_HOST || "localhost";
+const port = process.env.REDIS_PORT || 6379;
 
-exports.handler = async (event) => {
-  const { channel, eventName, data } = JSON.parse(event.body);
+const io = emitter({ host, port });
+
+const lambda = (event) => {
+  const { channel, eventName, data } = event;
 
   io.to(channel).emit(eventName, data);
 
@@ -16,3 +16,11 @@ exports.handler = async (event) => {
 
   return response;
 };
+
+const event = {
+  channel: "one",
+  eventName: "event",
+  data: "Hello from the local lambda!",
+};
+
+lambda(event);
