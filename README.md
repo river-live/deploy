@@ -57,3 +57,15 @@ Note that both the `cdk deploy` and `cdk destroy` commands can be used to deploy
 - `cdk destroy` destroys the specified stack(s) from your default AWS account/region
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app. The build step is not required when using JavaScript.
+
+The following script can be added to `package.json` to display the outputs from a stack in the terminal:
+
+```
+aws cloudformation describe-stacks --stack-name <YOUR_STACK_NAME> | jq '.Stacks | .[] | .Outputs | reduce .[] as $i ({}; .[$i.OutputKey] = $i.OutputValue)'
+```
+
+It seems that it's also possible to simply do the following (to be tested):
+
+```
+cdk deploy --outputs-file my-outputs.json
+```
