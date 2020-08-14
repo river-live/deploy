@@ -4,14 +4,26 @@ const io = emitter({
   port: process.env.REDIS_PORT,
 });
 
-exports.handler = async (event) => {
-  const { channel, eventName, data } = JSON.parse(event.body);
+const key = process.env.API_KEY;
 
-  io.to(channel).emit(eventName, data);
+exports.handler = async (event) => {
+  const requestKey = event.headers["x-api-key"];
+
+  if (requestKey !== key) {
+    return {
+      statusCode: 401,
+      body: "Unauthorized request",
+    };
+  }
+
+  const { channel, eventName, data } = JSON.parse(event.body);
+  const payload = { channel, data };
+
+  io.to(channel).emit(eventName, payload);
 
   const response = {
     statusCode: 200,
-    body: JSON.stringify(event),
+    body: JSON.stringify(event.body),
   };
 
   return response;
