@@ -22,8 +22,7 @@ exports.handler = async (event) => {
   io.to(channel).emit(eventName, payload);
 
   const response = {
-    statusCode: 200,
-    body: JSON.stringify(event.body),
+    statusCode: 204,
   };
 
   return response;
