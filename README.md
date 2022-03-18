@@ -25,7 +25,7 @@ You should be all set up, now for the fun part!
 
 - From the root directory, you can run `cdk synth`
 
-This is not strickly needed, but it will let you know if something is wrong. This command emits the synthesized CloudFormation templates and you can have a look at them in the newly created `cdk.out` folder. You should see two warnings about security (we can ignore those for now) followed by `Successfully synthesized ...`. Note that the command `cdk list` can be issued at any time and will output a list of stacks. If you run that command, you should see:
+This is not strictly needed, but it will let you know if something is wrong. This command emits the synthesized CloudFormation templates and you can have a look at them in the newly created `cdk.out` folder. You should see two warnings about security (we can ignore those for now) followed by `Successfully synthesized ...`. Note that the command `cdk list` can be issued at any time and will output a list of stacks. If you run that command, you should see:
 
 ```
 shared-resources
